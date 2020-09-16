@@ -1,92 +1,93 @@
-import React, { Component } from 'react'
-import Movie from './components/Movie'
+import React, { useState } from 'react'
+let op = ['+', '-', '*', '/']
 
-let nums = [...Array(101).keys()]
+// Start App
+const App = () => {
 
-// Includes Component for more utility
-class App extends Component {
-
-  // Defines variables 
-  state = {
-    count: 0,
-    title: '',
-    plot: '',
-    poster: '',
-    movie: '',
-    movies: []
-
-  }
-
-  // Functions here to be called below
-  handleResetCount = () => {
-    this.setState({ count: 0 })
-  }
-
-  handleAddValue = props => {
-    this.setState({ count: this.state.count + parseInt(props.target.value) })
-  }
-
-  // This boiler plate function makes a state of the item as its name
-  handleInputChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
-  handleAddMovie = event => {
-    event.preventDefault()
-    let movies = JSON.parse(JSON.stringify(this.state.movies))
-    movies.push({
-      title: this.state.title,
-      plot: this.state.plot,
-      poster: this.state.poster
+    // Counter
+    const [countState, setCountState] = useState({
+        count: 0 
     })
-    this.setState({ movies })
-  }
+
+    countState.handleCountClick = event => {
+        // ternary operator used. It's a shortened if else statement in a single line
+        // spread countState with ... before any changes to import all other states to prevent missing overwrites
+        setCountState({ ...countState, count: (event.target.value === '0') ? 0 : countState.count + parseInt(event.target.value) })
+        console.log(event.target.value)
+    }
 
 
-  // Render is the standard return to render page stuff
-  render() {
+    // Calculator
+    const [calcState, setCalcState] = useState({
+        num1: '',
+        num2: '',
+        op: '',
+        result: ''
+    })
+
+    calcState.handleNum = event => {
+        if (calcState.op === '') {
+            setCalcState({ ...calcState, num1: calcState.num1 + event.target.value })
+        } else {
+            setCalcState({ ...calcState, num2: calcState.num2 + event.target.value })
+        }
+    }
+
+    calcState.handleOp = event => {
+        if (calcState.num1 !== '') {
+            setCalcState({ ...calcState, op: event.target.value})
+        } else {
+            console.log('Please enter a number first')
+        }
+    }
+
+    calcState.handleEquals = event => {
+        if (calcState.num2 !== '') {
+            switch (calcState.op) {
+                case '+':
+                    setCalcState({ result: parseInt(calcState.num1) + parseInt(calcState.num2) })
+                    break
+                case '-':
+                    setCalcState({ result: parseInt(calcState.num1) - parseInt(calcState.num2) })
+                    break
+                case '*':
+                    setCalcState({ result: parseInt(calcState.num1) * parseInt(calcState.num2) })
+                    break
+                case '/':
+                    setCalcState({ result: parseInt(calcState.num1) / parseInt(calcState.num2) })
+                    break
+            }
+        } else {
+            console.log('Please enter a second number')
+        }
+    }
+
+    calcState.handleReset = () => {
+        setCalcState({ ...calcState, result: '', num1: '', num2: '', op: '' })
+      }
+
     return (
-      <>
+        <>
+            <h1>Count: {countState.count}</h1>
+            <button value={+1} onClick={countState.handleCountClick}>Add</button>
+            <button value={-1} onClick={countState.handleCountClick}>Subtract</button>
+            <button value={0} onClick={countState.handleCountClick}>Reset</button>
+            <hr/>
 
-        <h1>Count : {this.state.count}</h1>
-        <button onClick={this.handleResetCount}>Reset</button>
-        { nums.map(num => <button onClick={this.handleAddValue} value={num}>{num}</button>)}
-        <hr />
-
-
-        <h1>Movie App</h1>
-        <form>
-          <label htmlFor="item">Movie title:</label>
-          <input
-            type="text"
-            name="title"
-            value={this.state.item}
-            onChange={this.handleInputChange} />
-
-          <label htmlFor="plot">Movie plot:</label>
-          <input
-            type="text"
-            name="plot"
-            value={this.state.item}
-            onChange={this.handleInputChange} />
-
-          <label htmlFor="poster">Movie Poster:</label>
-          <input
-            type="text"
-            name="poster"
-            value={this.state.item}
-            onChange={this.handleInputChange} />
-
-          <button onClick={this.handleAddMovie}>Add Movie</button>
-
-        </form>
-
-        { this.state.movies.map(movies => <Movie movie={movies} />)}
-      </>
+            <h1>Calculator App</h1>
+            <h1>{calcState.result}</h1>
+            <h1>{calcState.num1} {calcState.op} {calcState.num2}</h1>
+            { [...Array(10).keys()].map(num => <button value={num} onClick={calcState.handleNum}>{num}</button>)}
+            <br/>
+            { op.map(op => <button onClick={calcState.handleOp} value={op}>{op}</button>) }
+            <br/>
+            <button onClick={calcState.handleEquals} value={'equals'}>=</button>
+            <br/>
+            <button onClick={calcState.handleReset}>Reset</button>
+            
+        </>
     )
-  }
-
 }
 
-
+// Export app
 export default App

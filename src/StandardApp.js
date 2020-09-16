@@ -27,7 +27,7 @@ let songs = [
   },
 ]
 
-Standard
+
 
 const App = () => {
   return (
