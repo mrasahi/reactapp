@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 let op = ['+', '-', '*', '/']
 
 // Start App
@@ -56,6 +56,9 @@ const App = () => {
                 case '/':
                     setCalcState({ result: parseInt(calcState.num1) / parseInt(calcState.num2) })
                     break
+                default:
+                    console.log('Something went wrong in the ops')
+                    break
             }
         } else {
             console.log('Please enter a second number')
@@ -66,12 +69,14 @@ const App = () => {
         setCalcState({ ...calcState, result: '', num1: '', num2: '', op: '' })
       }
 
+
     return (
         <>
             <h1>Count: {countState.count}</h1>
             <button value={+1} onClick={countState.handleCountClick}>Add</button>
             <button value={-1} onClick={countState.handleCountClick}>Subtract</button>
             <button value={0} onClick={countState.handleCountClick}>Reset</button>
+
             <hr/>
 
             <h1>Calculator App</h1>
@@ -84,6 +89,10 @@ const App = () => {
             <button onClick={calcState.handleEquals} value={'equals'}>=</button>
             <br/>
             <button onClick={calcState.handleReset}>Reset</button>
+
+            <hr/>
+
+            <h1>Giphy App</h1>
             
         </>
     )
